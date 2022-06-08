@@ -1,8 +1,18 @@
-/* global variable 
-search history array
-link weather api
-weather api key
-*/
+// global variable 
+var button = document.querySelector('.find-city')
+var cityInput = $("#city-input").val();
+// search history array
+var cityArr = [];
+// link weather api */
+var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityInput + "&appid=" + APIKey;
+/* weather api key */
+var APIKey = "bf0bd255e9d89ab52a766cb923df7039";
+
+button.addEventListener('click', function(){
+    fetch(queryURL)
+    .then(response => response.json())
+    .then(data => console.log(data))
+}
 
 /* dom elements
 grab search form
