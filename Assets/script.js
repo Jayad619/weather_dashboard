@@ -1,18 +1,31 @@
 // global variable 
-var button = document.querySelector('.find-city')
-var cityInput = $("#city-input").val();
+var button = $('#find-city');
+var cityInput = $('#city-input').val();
 // search history array
 var cityArr = [];
-// link weather api */
-var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityInput + "&appid=" + APIKey;
 /* weather api key */
-var APIKey = "bf0bd255e9d89ab52a766cb923df7039";
+var weatherKey = "bf0bd255e9d89ab52a766cb923df7039";
+// link weather api */
+// var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityInput + "&appid="+ weatherKey;
+// "https://api.openweathermap.org/data/2.5/weather?q=birmingham&appid=bf0bd255e9d89ab52a766cb923df7039";
 
-button.addEventListener('click', function(){
+
+function buttonclick(response) {
+    var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityInput + "&appid="+ weatherKey;
+    button.click((function(){
     fetch(queryURL)
     .then(response => response.json())
     .then(data => console.log(data))
+    cityInput = response.name;
+    }),
+console.log(cityInput));
+
 }
+buttonclick()
+
+
+// console.log("hello"),
+    
 
 /* dom elements
 grab search form
