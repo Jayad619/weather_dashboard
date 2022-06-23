@@ -1,6 +1,6 @@
 // global variable 
 var button = $('#find-city');
-var cityInput = $('#city-input').val();
+// var cityInput = $('#city-input')
 // search history array
 var cityArr = [];
 /* weather api key */
@@ -9,23 +9,50 @@ var weatherKey = "bf0bd255e9d89ab52a766cb923df7039";
 // var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityInput + "&appid="+ weatherKey;
 // "https://api.openweathermap.org/data/2.5/weather?q=birmingham&appid=bf0bd255e9d89ab52a766cb923df7039";
 
+// trying to log the weather data
 
-function buttonclick(response) {
-    var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityInput + "&appid="+ weatherKey;
-    button.click((function(){
+button.click((function(){
+    const city = $('#city-input').val()
+    const queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${weatherKey}`;
+    
     fetch(queryURL)
     .then(response => response.json())
-    .then(data => console.log(data))
-    cityInput = response.name;
-    }),
-console.log(cityInput));
+    .then(data => makeCards(data))
+}));
 
+
+//function to show saved city button after refresh
+function showSavedData() {
+    var cityArr = JSON.parse(localStorage.getItem('citylist'));
+
+
+    for (var i = 0; i < cityArr.length; i++) {
+        console.log("cityArr", cityArr);
+
+         // Then dynamicaly generating buttons for each city in the array
+         var a = $("<button>").attr({ "class": "list-group-item list-group-item-action", "id": cityArr[i] });
+
+         // Providing the initial button text
+         a.text(cityArr[i]);
+         // Adding the button to the buttons-view div
+         $("#buttons-view").append(a);
+ 
+         $("#" + cityArr[i]).on("click", function (event) {
+             event.preventDefault();
+ 
+             var cityName = this.id;
+ 
+             getWeatherToday(cityName, "existing");
+             getWeatherForecast(cityName, APIKey);
+ 
+ 
+         });
+    }
 }
-buttonclick()
 
-
-// console.log("hello"),
+function makeCards (data){
     
+}
 
 /* dom elements
 grab search form
