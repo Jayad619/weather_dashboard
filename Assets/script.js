@@ -49,9 +49,11 @@ function showSavedData() {
          });
     }
 }
-
+// function to generate cards
 function makeCards (data){
-    
+    console.log(data.weather)
+    console.log(data.name)
+    console.log(data.main.temp)
 }
 
 /* dom elements
