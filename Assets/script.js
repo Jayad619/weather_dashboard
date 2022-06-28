@@ -1,5 +1,5 @@
-//target parent
-    const recentSearchesContainer = $("#recent-searches-container");
+const recentSearchesContainer = $("#recent-searches-container");
+const searchForm = $("#search-form");
 
 const readFromLocalStorage = (key, defaultValue) => {
     // get from LS using key name
@@ -15,11 +15,18 @@ const readFromLocalStorage = (key, defaultValue) => {
     }
   };
 
+  const writeToLocalStorage = (key, value) => {
+      // convert value to string
+      const stringifiedValue = JSON.stringify(value);
+
+    //   set stringified value to LS for key name
+    localStorage.setItem(key, stringifiedValue);
+  };
+
 const renderRecentSearches = () => {
 
     // get recent searches from LS
-    // const recentSearches = readFromLocalStorage("recentSearches",[]);
-    const recentSearches = ["London", "Leeds","BHam"]
+    const recentSearches = readFromLocalStorage("recentSearches",[]);
 
     //("foo","bar")
     if(recentSearches.length) {
@@ -28,7 +35,7 @@ const renderRecentSearches = () => {
             return `<li class="list-group-item" data-city="${city}"> ${city}</li>`
         };
 
-        const recentCities = recentSearches.map(createRecentCity).join("");
+    const recentCities = recentSearches.map(createRecentCity).join("");
 
         console.log(recentCities)
     //else render recent searches list
@@ -61,11 +68,53 @@ const handleRecentSearchClick =(event) => {
     }
 };
 
+// logging search click
+const handleFormSubmit = (event) => {
+    event.preventDefault();
+
+    // get form input value
+    const cityName = $("#search-input").val();
+
+    //validate
+    if (cityName) {
+        console.log (cityName);
+
+    // get recent searches from LS
+    const recentSearches = readFromLocalStorage("recentSearches", []);
+
+    // push city name to array
+    recentSearches.push(cityName);
+
+    // write recent searches to LS
+    writeToLocalStorage("recentSearches", recentSearches);
+    
+    //remove previous items
+    recentSearchesContainer.children().last().remove();
+
+    // re-render recent cities
+    renderRecentSearches();
+    }
+};
+
+//trying to log data
+// button.click((function(){
+//     const city = $('#city-input').val()
+//     const queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${weatherKey}`;
+    
+//     fetch(queryURL)
+//     .then(response => response.json())
+//     // .then(data => makeCards(data))
+//     console.log(data.weather)
+//     console.log(data.name)
+//     console.log(data.main.temp)
+// }));
+
 const onReady = () => {
     renderRecentSearches();
 }; 
 
 recentSearchesContainer.click(handleRecentSearchClick)
+searchForm.submit(handleFormSubmit);
 $(document).ready(onReady)
 
 // global variable 
@@ -79,16 +128,6 @@ var weatherKey = "bf0bd255e9d89ab52a766cb923df7039";
 // var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityInput + "&appid="+ weatherKey;
 // "https://api.openweathermap.org/data/2.5/weather?q=birmingham&appid=bf0bd255e9d89ab52a766cb923df7039";
 
-// trying to log the weather data
-
-button.click((function(){
-    const city = $('#city-input').val()
-    const queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${weatherKey}`;
-    
-    fetch(queryURL)
-    .then(response => response.json())
-    .then(data => makeCards(data))
-}));
 
 
 // //function to show saved city button after refresh
@@ -118,6 +157,8 @@ button.click((function(){
  
 //          });
 //     }
+
+
 // function to generate cards
 function makeCards (data){
     console.log(data.weather)
