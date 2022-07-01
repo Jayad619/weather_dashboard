@@ -23,30 +23,52 @@ const readFromLocalStorage = (key, defaultValue) => {
     localStorage.setItem(key, stringifiedValue); 
   };
 
-    const renderCurrentData = () => {
+const constructUrl = (baseUrl, params) => {
+    const queryParams = new URLSearchParams(params).toString();
+  
+    return queryParams ? `${baseUrl}?${queryParams}` : baseUrl;
+  };
+  
+  const fetchData = async (url, options = {}) => {
+    try {
+      const response = await fetch(url, options);
+  
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        throw new Error("Failed to fetch data");
+      }
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+
+    const renderCurrentData = (data) => {
+        console.log(data);
         const currentWeatherCard = `<div>
-        <h2>Birmingham</h2>
+        <h2>${data.cityName}<h2>
         <h5>Monday, 9th May, 2022</h5>
         <img 
-        src="http://openweathermap.org/img/w/04d.png" alt="weather icon" class="shadow-sm p-3 bg-body rounded border mb-3 mt-2 " />
+        src="http://openweathermap.org/img/w/${data.weaherdata.current.weather[0].icon}.png" alt="weather icon" class="shadow-sm p-3 bg-body rounded border mb-3 mt-2 " />
 
         
             <div class = "row g-0 border">
                 <div class="col-sm-12 col-md 4 ">Temperature</div>
-                <div class="col-sm-12 col-md 8 ">16 &deg;C</div>
+                <div class="col-sm-12 col-md 8 ">${data.weaherdata.current.temp}&deg; C</div>
             </div>
             <div class = "row g-0 border">
                 <div class="col-sm-12 col-md 4 ">Humidity</div>
-                <div class="col-sm-12 col-md 8 ">20 &percnt;</div>
+                <div class="col-sm-12 col-md 8 ">${data.weaherdata.current.humidity}&percnt;</div>
             </div>
             <div class = "row g-0 border">
                 <div class="col-sm-12 col-md 4 ">Wind Speed</div>
-                <div class="col-sm-12 col-md 8 ">10 MPH</div>
+                <div class="col-sm-12 col-md 8 ">${data.weaherdata.current.wind_speed}MPH</div>
             </div>
             <div class = "row g-0 border">
                 <div class="col-sm-12 col-md 4 ">UV Index</div>
                 <div class="col-sm-12 col-md 8 ">
-                    <span class="bg-success text-white px-3 rounded-2">1.5</span>
+                    <span class="bg-success text-white px-3 rounded-2">${data.weaherdata.current.uvi}</span>
                 </div>
             </div>
         </div>`;
@@ -213,7 +235,7 @@ const renderRecentSearches = () => {
 
     const recentCities = recentSearches.map(createRecentCity).join("");
 
-        console.log(recentCities)
+        // console.log(recentCities)
     //else render recent searches list
     const ul = `<ul class="list-group">
     ${recentCities}
@@ -233,6 +255,47 @@ const renderRecentSearches = () => {
     }
 };
 
+const fetchWeatherData = async (cityName) => {
+    // fetch data from API
+    // current data url
+    const currentDataUrl = constructUrl("https://api.openweathermap.org/data/2.5/weather",
+        {
+        q: cityName,
+        appid: "bf0bd255e9d89ab52a766cb923df7039",
+        }
+    );
+
+    const currentData = await fetchData(currentDataUrl);
+
+    //  get lat,lon and city name
+    const lat = currentData?.coord?.lat;
+    const lon = currentData?.coord?.lon;
+    const displayCityName = currentData?.name;
+
+    console.log (lat,lon,displayCityName);
+
+    // forecast url
+    const forecastDataUrl = constructUrl(
+        "https://api.openweathermap.org/data/2.5/onecall",
+        {
+          lat: lat,
+          lon: lon,
+          exclude: "minutely,hourly",
+          units: "metric",
+          appid: "bf0bd255e9d89ab52a766cb923df7039",
+        }
+      );
+
+      const forecastData = await fetchData(forecastDataUrl);
+
+      console.log(forecastData);
+
+      return {
+          cityName : displayCityName,
+          weaherdata: forecastData,
+      };
+};
+
 const handleRecentSearchClick =(event) => {
     const target = $(event.target);
 
@@ -245,7 +308,7 @@ const handleRecentSearchClick =(event) => {
 };
 
 // logging search click
-const handleFormSubmit = (event) => {
+const handleFormSubmit = async (event) => {
     event.preventDefault();
 
     // get form input value
@@ -253,15 +316,14 @@ const handleFormSubmit = (event) => {
 
     //validate
     if (cityName) {
-        console.log (cityName);
-
-    // fetch data from API
+        // fetch weatherdata
+        const weatherData = await fetchWeatherData(cityName)
 
     // render current data
-    renderCurrentData();
+    renderCurrentData(weatherData);
 
     // render 5 day forecast
-    renderForecastdata();
+    renderForecastdata(weatherData);
 
     // get recent searches from LS
     const recentSearches = readFromLocalStorage("recentSearches", []);
