@@ -48,7 +48,7 @@ const constructUrl = (baseUrl, params) => {
         console.log(data);
         const currentWeatherCard = `<div>
         <h2>${data.cityName}<h2>
-        <h5>Monday, 9th May, 2022</h5>
+        <h5> DATE NEEDS FIXING </h5>
         <img 
         src="http://openweathermap.org/img/w/${data.weaherdata.current.weather[0].icon}.png" alt="weather icon" class="shadow-sm p-3 bg-body rounded border mb-3 mt-2 " />
 
@@ -76,145 +76,48 @@ const constructUrl = (baseUrl, params) => {
     weatherInfoContainer.append(currentWeatherCard);
     };
 
-    const renderForecastdata = () => {
+    const renderForecastdata = (data) => {
+        const createForecastCard = (each) => {
+            const forecast = `<div class="card-body m-2">
+            <img 
+src="http://openweathermap.org/img/w/${each.weather[0].icon}.png" alt="weather icon" class="shadow-sm p-3 bg-body rounded border mb-3 mt-2 " />
+          <h5 class="card-title">DATE NEEDS FIXING</h5>
+          <div class="mt-4">
+            <div class = "row g-0 border">
+                <div class="col-sm-12 p-2 col-md 4 ">Temperature</div>
+                <div class="col-sm-12 p-3 col-md 8 ">${each.temp.day}&deg;C</div>
+            </div>
+            <div class = "row g-0 border">
+                <div class="col-sm-12 p-2 col-md 4 ">Humidity</div>
+                <div class="col-sm-12 p-3 col-md 8 ">${each.humidity}&percnt;</div>
+            </div>
+            <div class = "row g-0 border">
+                <div class="col-sm-12 p-2 col-md 4 ">Wind Speed</div>
+                <div class="col-sm-12 p-3 col-md 8 ">${each.wind_speed}MPH</div>
+            </div>
+            <div class = "row g-0 border">
+                <div class="col-sm-12 p-2 col-md 4 ">UV Index</div>
+                <div class="col-sm-12 p-3 col-md 8 ">
+                    <span class="bg-success text-white px-3 rounded-2">${each.uvi}</span>
+                </div>
+            </div>
+
+          </div>
+        </div>`;
+
+        return forecast;
+        };
+        const forecastCards = data.weaherdata.daily.slice(1, 6).map(createForecastCard).join("");
+
         const forecastWeatherCards = `<div>
         <h3>5 Day Forecast</h3>
         <hr />
         <div>
             <div class="d-flex flex-row justify-content-center flex-wrap">
 
-                <div class="card-body m-2">
-                    <img 
-        src="http://openweathermap.org/img/w/04d.png" alt="weather icon" class="shadow-sm p-3 bg-body rounded border mb-3 mt-2 " />
-                  <h5 class="card-title">Tuesday, 10th May</h5>
-                  <div class="mt-4">
-                    <div class = "row g-0 border">
-                        <div class="col-sm-12 p-2 col-md 4 ">Temperature</div>
-                        <div class="col-sm-12 p-3 col-md 8 ">16 &deg;C</div>
-                    </div>
-                    <div class = "row g-0 border">
-                        <div class="col-sm-12 p-2 col-md 4 ">Humidity</div>
-                        <div class="col-sm-12 p-3 col-md 8 ">20 &percnt;</div>
-                    </div>
-                    <div class = "row g-0 border">
-                        <div class="col-sm-12 p-2 col-md 4 ">Wind Speed</div>
-                        <div class="col-sm-12 p-3 col-md 8 ">10 MPH</div>
-                    </div>
-                    <div class = "row g-0 border">
-                        <div class="col-sm-12 p-2 col-md 4 ">UV Index</div>
-                        <div class="col-sm-12 p-3 col-md 8 ">
-                            <span class="bg-success text-white px-3 rounded-2">1.5</span>
-                        </div>
-                    </div>
+              ${forecastCards}  
 
-                  </div>
-                </div>
-                <div class="card-body m-2">
-                    <img 
-        src="http://openweathermap.org/img/w/04d.png" alt="weather icon" class="shadow-sm p-3 bg-body rounded border mb-3 mt-2 " />
-                  <h5 class="card-title">Tuesday, 10th May</h5>
-                  <div class="mt-4">
-                    <div class = "row g-0 border">
-                        <div class="col-sm-12 p-2 col-md 4 ">Temperature</div>
-                        <div class="col-sm-12 p-3 col-md 8 ">16 &deg;C</div>
-                    </div>
-                    <div class = "row g-0 border">
-                        <div class="col-sm-12 p-2 col-md 4 ">Humidity</div>
-                        <div class="col-sm-12 p-3 col-md 8 ">20 &percnt;</div>
-                    </div>
-                    <div class = "row g-0 border">
-                        <div class="col-sm-12 p-2 col-md 4 ">Wind Speed</div>
-                        <div class="col-sm-12 p-3 col-md 8 ">10 MPH</div>
-                    </div>
-                    <div class = "row g-0 border">
-                        <div class="col-sm-12 p-2 col-md 4 ">UV Index</div>
-                        <div class="col-sm-12 p-3 col-md 8 ">
-                            <span class="bg-success text-white px-3 rounded-2">1.5</span>
-                        </div>
-                    </div>
-
-                  </div>
-                </div>
-                <div class="card-body m-2">
-                    <img 
-        src="http://openweathermap.org/img/w/04d.png" alt="weather icon" class="shadow-sm p-3 bg-body rounded border mb-3 mt-2 " />
-                  <h5 class="card-title">Tuesday, 10th May</h5>
-                  <div class="mt-4">
-                    <div class = "row g-0 border">
-                        <div class="col-sm-12 p-2 col-md 4 ">Temperature</div>
-                        <div class="col-sm-12 p-3 col-md 8 ">16 &deg;C</div>
-                    </div>
-                    <div class = "row g-0 border">
-                        <div class="col-sm-12 p-2 col-md 4 ">Humidity</div>
-                        <div class="col-sm-12 p-3 col-md 8 ">20 &percnt;</div>
-                    </div>
-                    <div class = "row g-0 border">
-                        <div class="col-sm-12 p-2 col-md 4 ">Wind Speed</div>
-                        <div class="col-sm-12 p-3 col-md 8 ">10 MPH</div>
-                    </div>
-                    <div class = "row g-0 border">
-                        <div class="col-sm-12 p-2 col-md 4 ">UV Index</div>
-                        <div class="col-sm-12 p-3 col-md 8 ">
-                            <span class="bg-success text-white px-3 rounded-2">1.5</span>
-                        </div>
-                    </div>
-
-                  </div>
-                </div>
-                <div class="card-body m-2">
-                    <img 
-        src="http://openweathermap.org/img/w/04d.png" alt="weather icon" class="shadow-sm p-3 bg-body rounded border mb-3 mt-2 " />
-                  <h5 class="card-title">Tuesday, 10th May</h5>
-                  <div class="mt-4">
-                    <div class = "row g-0 border">
-                        <div class="col-sm-12 p-2 col-md 4 ">Temperature</div>
-                        <div class="col-sm-12 p-3 col-md 8 ">16 &deg;C</div>
-                    </div>
-                    <div class = "row g-0 border">
-                        <div class="col-sm-12 p-2 col-md 4 ">Humidity</div>
-                        <div class="col-sm-12 p-3 col-md 8 ">20 &percnt;</div>
-                    </div>
-                    <div class = "row g-0 border">
-                        <div class="col-sm-12 p-2 col-md 4 ">Wind Speed</div>
-                        <div class="col-sm-12 p-3 col-md 8 ">10 MPH</div>
-                    </div>
-                    <div class = "row g-0 border">
-                        <div class="col-sm-12 p-2 col-md 4 ">UV Index</div>
-                        <div class="col-sm-12 p-3 col-md 8 ">
-                            <span class="bg-success text-white px-3 rounded-2">1.5</span>
-                        </div>
-                    </div>
-
-                  </div>
-                </div>
-                <div class="card-body m-2">
-                    <img 
-        src="http://openweathermap.org/img/w/04d.png" alt="weather icon" class="shadow-sm p-3 bg-body rounded border mb-3 mt-2 " />
-                  <h5 class="card-title">Tuesday, 10th May</h5>
-                  <div class="mt-4">
-                    <div class = "row g-0 border">
-                        <div class="col-sm-12 p-2 col-md 4 ">Temperature</div>
-                        <div class="col-sm-12 p-3 col-md 8 ">16 &deg;C</div>
-                    </div>
-                    <div class = "row g-0 border">
-                        <div class="col-sm-12 p-2 col-md 4 ">Humidity</div>
-                        <div class="col-sm-12 p-3 col-md 8 ">20 &percnt;</div>
-                    </div>
-                    <div class = "row g-0 border">
-                        <div class="col-sm-12 p-2 col-md 4 ">Wind Speed</div>
-                        <div class="col-sm-12 p-3 col-md 8 ">10 MPH</div>
-                    </div>
-                    <div class = "row g-0 border">
-                        <div class="col-sm-12 p-2 col-md 4 ">UV Index</div>
-                        <div class="col-sm-12 p-3 col-md 8 ">
-                            <span class="bg-success text-white px-3 rounded-2">1.5</span>
-                        </div>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-
+        </div>
         </div>
         </div>`;
 
@@ -254,6 +157,21 @@ const renderRecentSearches = () => {
         recentSearchesContainer.append(alert);
     }
 };
+
+const renderWeatherInfo = async (cityName) => {
+
+    // fetch weatherdata
+    const weatherData = await fetchWeatherData(cityName);
+
+    // empty container
+    weatherInfoContainer.empty();
+
+     // render current data
+     renderCurrentData(weatherData);
+
+     // render 5 day forecast
+     renderForecastdata(weatherData);
+}
 
 const fetchWeatherData = async (cityName) => {
     // fetch data from API
@@ -316,14 +234,9 @@ const handleFormSubmit = async (event) => {
 
     //validate
     if (cityName) {
-        // fetch weatherdata
-        const weatherData = await fetchWeatherData(cityName)
 
-    // render current data
-    renderCurrentData(weatherData);
-
-    // render 5 day forecast
-    renderForecastdata(weatherData);
+        // render weather cards
+        await renderWeatherInfo(cityName);
 
     // get recent searches from LS
     const recentSearches = readFromLocalStorage("recentSearches", []);
