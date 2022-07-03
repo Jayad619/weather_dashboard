@@ -61,7 +61,7 @@ const constructUrl = (baseUrl, params) => {
         console.log(data);
         const currentWeatherCard = `<div>
         <h2>${data.cityName}<h2>
-        <h5> DATE NEEDS FIXING </h5>
+        <h5> ADD TIME </h5>
         <img 
         src="http://openweathermap.org/img/w/${data.weaherdata.current.weather[0].icon}.png" alt="weather icon" class="shadow-sm p-3 bg-body rounded border mb-3 mt-2 " />
 
