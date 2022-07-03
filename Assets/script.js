@@ -44,6 +44,19 @@ const constructUrl = (baseUrl, params) => {
     }
   };
 
+  const getUviClassName = (uvi) => {
+    if (uvi >= 0 && uvi <= 2) {
+      return "bg-success";
+    }
+  
+    if (uvi > 2 && uvi <= 8) {
+      return "bg-warning";
+    }
+    if (uvi > 8) {
+      return "bg-danger";
+    }
+  };
+
     const renderCurrentData = (data) => {
         console.log(data);
         const currentWeatherCard = `<div>
@@ -68,7 +81,7 @@ const constructUrl = (baseUrl, params) => {
             <div class = "row g-0 border">
                 <div class="col-sm-12 col-md 4 ">UV Index</div>
                 <div class="col-sm-12 col-md 8 ">
-                    <span class="bg-success text-white px-3 rounded-2">${data.weaherdata.current.uvi}</span>
+                    <span class=" text-white px-3 rounded-2 ${getUviClassName(data.weaherdata.current.uvi)}">${data.weaherdata.current.uvi}</span>
                 </div>
             </div>
         </div>`;
@@ -98,7 +111,7 @@ src="http://openweathermap.org/img/w/${each.weather[0].icon}.png" alt="weather i
             <div class = "row g-0 border">
                 <div class="col-sm-12 p-2 col-md 4 ">UV Index</div>
                 <div class="col-sm-12 p-3 col-md 8 ">
-                    <span class="bg-success text-white px-3 rounded-2">${each.uvi}</span>
+                    <span class=" text-white px-3 rounded-2 ${getUviClassName(each.uvi)}">${each.uvi}</span>
                 </div>
             </div>
 
@@ -133,12 +146,11 @@ const renderRecentSearches = () => {
     if(recentSearches.length) {
 
         const createRecentCity = (city) => {
-            return `<li class="list-group-item" data-city="${city}"> ${city}</li>`
+            return `<li class="list-group-item" data-city="${city}"> ${city}</li>`;
         };
 
     const recentCities = recentSearches.map(createRecentCity).join("");
 
-        // console.log(recentCities)
     //else render recent searches list
     const ul = `<ul class="list-group">
     ${recentCities}
@@ -158,9 +170,21 @@ const renderRecentSearches = () => {
     }
 };
 
+const renderErrorAlert = () => {
+    // empty container
+    weatherInfoContainer.empty();
+
+    const alert = `<div class ="alert alert-danger" role="alert"> 
+    Something went wrong! Please try again. 
+    </div>`;
+
+    weatherInfoContainer.append(alert);
+};
+
 const renderWeatherInfo = async (cityName) => {
 
-    // fetch weatherdata
+    try {
+        // fetch weatherdata
     const weatherData = await fetchWeatherData(cityName);
 
     // empty container
@@ -171,7 +195,13 @@ const renderWeatherInfo = async (cityName) => {
 
      // render 5 day forecast
      renderForecastdata(weatherData);
-}
+
+     return true;
+    } catch (error) {
+        renderErrorAlert();
+        return false;
+    }
+};
 
 const fetchWeatherData = async (cityName) => {
     // fetch data from API
@@ -214,14 +244,15 @@ const fetchWeatherData = async (cityName) => {
       };
 };
 
-const handleRecentSearchClick =(event) => {
+const handleRecentSearchClick = async (event) => {
     const target = $(event.target);
 
     // restrict clicks only from li's
     if (target.is("li")) {
         // get data city attribute
         const cityName = target.attr("data-city");
-        console.log(cityName);
+        
+        await renderWeatherInfo (cityName)
     }
 };
 
@@ -236,12 +267,13 @@ const handleFormSubmit = async (event) => {
     if (cityName) {
 
         // render weather cards
-        await renderWeatherInfo(cityName);
+        const renderStatus = await renderWeatherInfo(cityName);
 
     // get recent searches from LS
     const recentSearches = readFromLocalStorage("recentSearches", []);
 
-    // push city name to array
+        if (!recentSearches.includes(cityName) && renderStatus) {
+             // push city name to array
     recentSearches.push(cityName);
 
     // write recent searches to LS
@@ -252,6 +284,7 @@ const handleFormSubmit = async (event) => {
 
     // re-render recent cities
     renderRecentSearches();
+        }
     }
 };
 
@@ -275,67 +308,3 @@ const onReady = () => {
 recentSearchesContainer.click(handleRecentSearchClick)
 searchForm.submit(handleFormSubmit);
 $(document).ready(onReady)
-
-// global variable 
-var button = $('#find-city');
-// var cityInput = $('#city-input')
-// search history array
-var cityArr = [];
-/* weather api key */
-var weatherKey = "bf0bd255e9d89ab52a766cb923df7039";
-// link weather api */
-// var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityInput + "&appid="+ weatherKey;
-// "https://api.openweathermap.org/data/2.5/weather?q=birmingham&appid=bf0bd255e9d89ab52a766cb923df7039";
-
-
-
-// //function to show saved city button after refresh
-// function showSavedData() {
-//     var cityArr = JSON.parse(localStorage.getItem('citylist'));
-
-
-//     for (var i = 0; i < cityArr.length; i++) {
-//         console.log("cityArr", cityArr);
-
-//          // Then dynamicaly generating buttons for each city in the array
-//          var a = $("<button>").attr({ "class": "list-group-item list-group-item-action", "id": cityArr[i] });
-
-//          // Providing the initial button text
-//          a.text(cityArr[i]);
-//          // Adding the button to the buttons-view div
-//          $("#buttons-view").append(a);
- 
-//          $("#" + cityArr[i]).on("click", function (event) {
-//              event.preventDefault();
- 
-//              var cityName = this.id;
- 
-//              getWeatherToday(cityName, "existing");
-//              getWeatherForecast(cityName, APIKey);
- 
- 
-//          });
-//     }
-
-
-// function to generate cards
-function makeCards (data){
-    console.log(data.weather)
-    console.log(data.name)
-    console.log(data.main.temp)
-}
-
-/* dom elements
-grab search form
-grab search input
-grab container for todays weather
-grab 5 day forecast
-grab search history buttons
-*/
-
-/* function to grab search history
-for loop to create buttons for previously searched cities
-another function to update locas storage based on search history 
-function to get search history from local storage
-creating html elements and workin w api
-*/
