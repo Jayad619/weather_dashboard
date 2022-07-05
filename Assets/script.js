@@ -18,9 +18,12 @@ const readFromLocalStorage = (key, defaultValue) => {
 
   const writeToLocalStorage = (key, value) => {
       // convert value to string
-      const stringifiedValue = JSON.stringify(value);
+      if(value?.length > 5){
+          value.shift();
+        }
+        const stringifiedValue = JSON.stringify(value);
+        localStorage.setItem(key, stringifiedValue); 
       //   set stringified value to LS for key name
-    localStorage.setItem(key, stringifiedValue); 
   };
 
 const constructUrl = (baseUrl, params) => {
@@ -91,10 +94,11 @@ const constructUrl = (baseUrl, params) => {
 
     const renderForecastdata = (data) => {
         const createForecastCard = (each) => {
+            console.log(each)
             const forecast = `<div class="card-body m-2">
             <img 
 src="http://openweathermap.org/img/w/${each.weather[0].icon}.png" alt="weather icon" class="shadow-sm p-3 bg-body rounded border mb-3 mt-2 " />
-          <h5 class="card-title">DATE NEEDS FIXING</h5>
+          <h5 class="card-title">${moment(each.dt).format("L")}</h5>
           <div class="mt-4">
             <div class = "row g-0 border">
                 <div class="col-sm-12 p-2 col-md 4 ">Temperature</div>
