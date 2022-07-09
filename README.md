@@ -4,4 +4,7 @@ The OpenWeather API was used to create a dashboard that shows the weather foreca
 
 When a user searches for a location, the current weather and a 5-day forecast are displayed. Temperature, wind speed, humidity, UV Index, and an easy-to-understand weather indicator are all included in the weather information. The UV index is color-coded to make it easier for consumers to understand the value.
 
-links:
+links: 
+
+![Weather Dashboard](./Assets/Screenshot%202022-07-09%20at%2010.55.26.png?raw=true "Weather Dashboard")
+https://github.com/Jayad619/weather_dashboard
