@@ -64,9 +64,11 @@ const constructUrl = (baseUrl, params) => {
         console.log(data);
         const currentWeatherCard = `<div>
         <h2>${data.cityName}<h2>
-        <h5> ADD TIME </h5>
+        <h5> ${moment
+            .unix(data.weaherdata.current.dt + data.weaherdata.timezone_offset)
+            .format("dddd, Do MMM, YYYY HH:mm:ss")} </h5>
         <img 
-        src="http://openweathermap.org/img/w/${data.weaherdata.current.weather[0].icon}.png" alt="weather icon" class="shadow-sm p-3 bg-body rounded border mb-3 mt-2 " />
+        src="http://openweathermap.org/img/w/${data.weaherdata.daily[0].weather[0].icon}.png" alt="weather icon" class="shadow-sm p-3 bg-body rounded border mb-3 mt-2 " />
 
         
             <div class = "row g-0 border">
@@ -98,7 +100,7 @@ const constructUrl = (baseUrl, params) => {
             const forecast = `<div class="card-body m-2">
             <img 
 src="http://openweathermap.org/img/w/${each.weather[0].icon}.png" alt="weather icon" class="shadow-sm p-3 bg-body rounded border mb-3 mt-2 " />
-          <h5 class="card-title">${moment(each.dt).format("L")}</h5>
+          <h5 class="card-title">${moment.unix(each.dt).format("ddd, Do MMM")} </h5>
           <div class="mt-4">
             <div class = "row g-0 border">
                 <div class="col-sm-12 p-2 col-md 4 ">Temperature</div>
