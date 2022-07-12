@@ -8,3 +8,4 @@ links:
 
 ![Weather Dashboard](./Assets/Screenshot%202022-07-09%20at%2010.55.26.png?raw=true "Weather Dashboard")
 https://github.com/Jayad619/weather_dashboard
+https://jayad619.github.io/weather_dashboard/
