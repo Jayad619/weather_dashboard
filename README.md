@@ -1,4 +1,4 @@
-Weather Dashboard
+# Weather Dashboard
 
 The OpenWeather API was used to create a dashboard that shows the weather forecast for different cities. This weather dashboard was created to assist users in viewing current weather conditions in their city and other cities, as well as the forecast for the following five days.
 
